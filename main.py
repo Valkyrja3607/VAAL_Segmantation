@@ -121,7 +121,7 @@ def main(args):
             myTransforms.Scale(688, 688),
             #myTransforms.RandomCropResize(32),
             myTransforms.RandomFlip(),
-            myTransforms.RandomRotate(),
+            # myTransforms.RandomRotate(),
             # myTransforms.RandomCrop(64).
             myTransforms.ToTensor(args.scaleIn),
             #
