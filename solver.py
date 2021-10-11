@@ -12,13 +12,26 @@ from sklearn.metrics import accuracy_score
 import sampler
 import copy
 
+class BCELoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.bce = nn.BCELoss()
+
+    def forward(self, input, target):
+        input = torch.where(torch.isnan(input), torch.zeros_like(input), input)
+        input = torch.where(torch.isinf(input), torch.zeros_like(input), input)
+        input = torch.where(input>1, torch.ones_like(input), input)  # 1を超える場合には1にする
+
+        target = target.float()
+
+        return self.bce(input, target)
 
 class Solver:
     def __init__(self, args, test_dataloader, weight):
         self.args = args
         self.test_dataloader = test_dataloader
 
-        self.bce_loss = nn.BCELoss()
+        self.bce_loss = BCELoss()
         self.mse_loss = nn.MSELoss()
         self.ce_loss = nn.CrossEntropyLoss()
         self.criterion = nn.NLLLoss2d()#ignore_index=0)
